@@ -5,7 +5,9 @@
 Sebuah service autentikasi dan otorisasi sederhana berbasis **Java 21**, **Spring Boot 3**, **PostgreSQL**, dan **JWT**.  
 Proyek ini dibuat sebagai template reusable untuk aplikasi lainnya.
 
-AuthService mendukung: ✅ Registrasi & Login  
+AuthService mendukung:
+
+✅ Registrasi & Login  
 ✅ JWT Authentication  
 ✅ Role-Based Authorization (RBAC)  
 ✅ Admin-Only Endpoints  
