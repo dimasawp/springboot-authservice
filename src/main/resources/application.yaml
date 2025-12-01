@@ -1,18 +1,18 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/db_auth
-    username: postgres
-    password:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/db_auth
+        username: postgres
+        password:
 
-  jpa:
-    hibarnate:
-      ddl-auto: update
-    show-sql: true
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
 
-  application:
-    name: authservice
+    application:
+        name: authservice
 
 security:
-  jwt:
-    secret-key: jwt-secret-here
-    expiration: 3600000 # 1 hour
+    jwt:
+        secret-key: tuXpuB7iwxDLz7GFl999mJvolS2ezzzsEQ2Zk7n9RJA=
+        expiration: 3600000 # 1 hour

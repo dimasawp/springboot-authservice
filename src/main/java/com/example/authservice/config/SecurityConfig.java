@@ -1,17 +1,16 @@
 package com.example.authservice.config;
 
-import com.example.authservice.service.JwtService;
 import com.example.authservice.repository.UserRepository;
+import com.example.authservice.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -32,51 +31,38 @@ public class SecurityConfig {
     private final UserRepository userRepository;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http.csrf(cs -> cs.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(new JwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(new JwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+    
+        return http.build();        
+    } 
 
-        return http.build();
-    }
-
-    // JWT Filter
     class JwtAuthFilter extends OncePerRequestFilter {
-
+        
         @Override
-        protected void doFilterInternal(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        FilterChain filterChain)
-                throws ServletException, IOException {
-
+        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
             String header = request.getHeader("Authorization");
 
-            if (header != null && header.startsWith("Bearer ")) {
+            if (header != null && header.startsWith("Bearer ")){
                 String token = header.substring(7);
 
-                if (jwtService.isValid(token)) {
-
+                if (jwtService.isValid(token)){
                     String email = jwtService.extractEmail(token);
-
                     var user = userRepository.findByEmail(email).orElse(null);
-
                     if (user != null) {
-                        var auth = new UsernamePasswordAuthenticationToken(
-                                email,
-                                null,
-                                List.of(new SimpleGrantedAuthority(user.getRole().getName()))
-                        );
+                        var auth = new UsernamePasswordAuthenticationToken(email, null, List.of(new SimpleGrantedAuthority(user.getRole().getName())));
                         SecurityContextHolder.getContext().setAuthentication(auth);
                     }
                 }
