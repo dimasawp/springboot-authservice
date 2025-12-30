@@ -1,61 +1,43 @@
-# 🔐 AuthService — Spring Boot Authentication & Authorization
+# 🔐 SpringBoot AuthService — JWT-Based Authentication & Authorization
+
+## 🚀 Description
+
+A Spring Boot backend project for secure user authentication and role-based authorization using JWT.  
+Designed to serve as a foundation for building secure REST APIs in Java applications.
+
+**Portfolio Highlights:**  
+- Implemented JWT authentication & role-based authorization  
+- Clean project structure following Spring Boot best practices  
+- Integrated PostgreSQL using Spring Data JPA  
 
 ---
 
-Sebuah service autentikasi dan otorisasi sederhana berbasis **Java 21**, **Spring Boot 3**, **PostgreSQL**, dan **JWT**.  
-Proyek ini dibuat sebagai template reusable untuk aplikasi lainnya.
+## ✨ Features
 
-AuthService mendukung:
+- **Authentication**
+  - → Register new users with default `ROLE_USER` and login with JWT  
 
-✅ Registrasi & Login  
-✅ JWT Authentication  
-✅ Role-Based Authorization (RBAC)  
-✅ Admin-Only Endpoints  
-✅ Auto-create tables via JPA
+- **Authorization**
+  - → `/api/user/**` accessible by USER or ADMIN, `/api/admin/**` accessible by ADMIN only  
+  - → Admin roles created via SQL  
 
 ---
 
-## ⚙️ **Tech Stack**
+## 🛠 Tech Stack
 
--   Java **21**
--   Spring Boot **3.4.12**
--   Spring Web
--   Spring Security
--   Spring Data JPA (Hibernate)
--   PostgreSQL
--   Lombok
--   JJWT (JSON Web Token)
-
----
-
-## 🚀 **Fitur**
-
-### **1. Register**
-
--   Pengguna baru otomatis mendapatkan role `ROLE_USER`
-
-### **2. Login**
-
--   Mengembalikan JWT token
-
-### **3. JWT Middleware**
-
--   Memvalidasi token
--   Menyuntikkan user ke `SecurityContext`
-
-### **4. Authorization**
-
--   `/api/user/**` → USER atau ADMIN
--   `/api/admin/**` → ADMIN Only
-
-### **5. Admin Creation**
-
--   Admin tidak bisa register
--   Admin harus dibuat manual via SQL (best practice)
+- **Runtime:** Java 21  
+- **Framework:** Spring Boot 3.4.12  
+- **Language:** Java  
+- **Database:** PostgreSQL  
+- **ORM:** Spring Data JPA (Hibernate)  
+- **Authentication:** JJWT (JSON Web Token)  
+- **API Style:** REST  
+- **Validation:** Lombok  
+- **Other Tools:** Spring Web, Spring Security  
 
 ---
 
-## 📦 **Instalasi & Setup**
+## ⚡ Quickstart
 
 ### **1. Clone Repository**
 
@@ -64,15 +46,15 @@ git clone https://github.com/<username>/authservice.git
 cd authservice
 ```
 
-### **2. Konfigurasi Database**
+### **2. Configure Database **
 
-Buat database PostgreSQL:
+Create a PostgreSQL database:
 
 ```bash
 CREATE DATABASE db_auth;
 ```
 
-### **3. Isi file application.yaml**
+### **3. Update application.yaml**
 
 ```bash
 spring:
@@ -92,20 +74,18 @@ security:
     expiration: 3600000
 ```
 
-## 🔑 **Inisialisasi Role (WAJIB)**
+### 4. Initialize Roles (MANDATORY)
 
-Tabel role harus diisi manual pertama kali.
-
-```bash
+Roles must be inserted manually on the first setup:
+```bash 
 INSERT INTO roles (name) VALUES ('ROLE_USER');
 INSERT INTO roles (name) VALUES ('ROLE_ADMIN');
 ```
 
-## 🙋‍♂️ **Registrasi User**
-
+### 5. Register a User
+```bash 
 POST /api/auth/register
 
-```bash
 Body:
 {
   "name": "Dimas",
@@ -117,105 +97,102 @@ Response:
 { "token": "<jwt_token>" }
 ```
 
-Catatan: user selalu mendapatkan ROLE_USER.
+Note: Users are automatically assigned the ROLE_USER.
 
-## 🔐 **Login**
-
+### 6. Login
+```bash 
 POST /api/auth/login
 
-```bash
+Body:
 {
   "email": "dimas@mail.com",
   "password": "123456"
 }
 
 Response:
-
 { "token": "<jwt_token>" }
 ```
 
-## 👤 **User Endpoint**
-
+### 7. Access User Endpoint
+```bash 
 GET /api/user/profile
 
-```bash
 Header:
 Authorization: Bearer <token>
 ```
 
-Roles:
+Roles allowed: USER, ADMIN
 
-```bash
-USER
-ADMIN
-```
-
-## 👑 **Membuat Admin (Manual SQL)**
-
-```bash
+### 8. Create Admin Manually (SQL)
+```bash 
 UPDATE users
 SET role_id = (SELECT id FROM roles WHERE name='ROLE_ADMIN')
 WHERE email = 'admin@mail.com';
 ```
 
-Setelah itu login → dapat token admin → bisa akses endpoint admin.
+After updating, login → get admin JWT → access admin endpoints.
 
-## 🛠 **Admin Endpoint**
-
+### 9. Access Admin Endpoint
+```bash 
 GET /api/admin/dashboard
 
-```bash
 Header:
 Authorization: Bearer <token_admin>
 ```
 
-Hanya role ROLE_ADMIN.
+Accessible only by ROLE_ADMIN.
 
-## 📁 **Struktur Proyek (Simplified)**
+---
 
-```bash
+## 🧪 Testing
+
+Use Postman or ThunderClient to test all available endpoints. Ensure the environment and configuration are correctly set up.
+
+---
+
+## 📁 Project Structure
+
+```none
 src/main/java/com/example/authservice/
 │
 ├── config/
-│   └── SecurityConfig.java
+│   └── SecurityConfig.java       # Spring Security configuration
 │
 ├── controller/
-│   ├── AuthController.java
-│   ├── UserController.java
-│   └── AdminController.java
+│   ├── AuthController.java       # Handles registration & login endpoints
+│   ├── UserController.java       # Endpoints accessible by USER or ADMIN
+│   └── AdminController.java      # Endpoints accessible by ADMIN only
 │
 ├── service/
-│   ├── AuthService.java
-│   └── JwtService.java
+│   ├── AuthService.java          # Authentication business logic
+│   └── JwtService.java           # JWT generation & validation
 │
 ├── entity/
-│   ├── User.java
-│   └── Role.java
+│   ├── User.java                 # User entity
+│   └── Role.java                 # Role entity
 │
 ├── repository/
-│   ├── UserRepository.java
-│   └── RoleRepository.java
+│   ├── UserRepository.java       # User database operations
+│   └── RoleRepository.java       # Role database operations
 │
 └── dto/
-    ├── RegisterRequest.java
-    ├── LoginRequest.java
-    └── AuthResponse.java
+    ├── RegisterRequest.java      # Payload for registration
+    ├── LoginRequest.java         # Payload for login
+    └── AuthResponse.java         # Response containing JWT
 ```
 
-## 🧪 **Cara Test dengan Postman / Thunder Client**
+Explanation:
+- Controller: Handles HTTP requests and responses
+- Service: Business logic for authentication and JWT handling
+- Repository: Database access layer for User and Role entities
+- Entity: Database models representing tables
+- DTO: Request and response payloads
+- Config: Security setup and configuration
 
-1. Register user → dapat token
-2. Login user → dapat token
-3. Coba /api/user/profile → berhasil
-4. Update user jadi admin via SQL
-5. Login admin → ambil token admin
-6. Coba /api/admin/dashboard → berhasil
+## 🎯 Goals
 
-## 🎯 **Tujuan Proyek**
-
-Proyek ini bertujuan untuk:
-
--   Belajar Spring Security modern
--   Menyiapkan reusable authentication service
--   Portofolio profesional Spring Boot
--   Fondasi untuk project tingkat lanjut
+- Learn and implement JWT-based authentication in Spring Boot
+- Gain experience with role-based authorization
+- Build a clean, maintainable backend project for portfolio
+- Integrate PostgreSQL with Spring Data JPA
+- Follow standard controller-service-repository architecture
