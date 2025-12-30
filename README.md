@@ -5,35 +5,37 @@
 A Spring Boot backend project for secure user authentication and role-based authorization using JWT.  
 Designed to serve as a foundation for building secure REST APIs in Java applications.
 
-**Portfolio Highlights:**  
-- Implemented JWT authentication & role-based authorization  
-- Clean project structure following Spring Boot best practices  
-- Integrated PostgreSQL using Spring Data JPA  
+**Portfolio Highlights:**
+
+-   Implemented JWT authentication & role-based authorization
+-   Clean project structure following Spring Boot best practices
+-   Integrated PostgreSQL using Spring Data JPA
 
 ---
 
 ## ✨ Features
 
-- **Authentication**
-  - → Register new users with default `ROLE_USER` and login with JWT  
+-   **Authentication**
 
-- **Authorization**
-  - → `/api/user/**` accessible by USER or ADMIN, `/api/admin/**` accessible by ADMIN only  
-  - → Admin roles created via SQL  
+    -   → Register new users with default `ROLE_USER` and login with JWT
+
+-   **Authorization**
+    -   → `/api/user/**` accessible by USER or ADMIN, `/api/admin/**` accessible by ADMIN only
+    -   → Admin roles created via SQL
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Runtime:** Java 21  
-- **Framework:** Spring Boot 3.4.12  
-- **Language:** Java  
-- **Database:** PostgreSQL  
-- **ORM:** Spring Data JPA (Hibernate)  
-- **Authentication:** JJWT (JSON Web Token)  
-- **API Style:** REST  
-- **Validation:** Lombok  
-- **Other Tools:** Spring Web, Spring Security  
+-   **Runtime:** Java 21
+-   **Framework:** Spring Boot 3.4.12
+-   **Language:** Java
+-   **Database:** PostgreSQL
+-   **ORM:** Spring Data JPA (Hibernate)
+-   **Authentication:** JJWT (JSON Web Token)
+-   **API Style:** REST
+-   **Validation:** Lombok
+-   **Other Tools:** Spring Web, Spring Security
 
 ---
 
@@ -77,13 +79,15 @@ security:
 ### 4. Initialize Roles (MANDATORY)
 
 Roles must be inserted manually on the first setup:
-```bash 
+
+```bash
 INSERT INTO roles (name) VALUES ('ROLE_USER');
 INSERT INTO roles (name) VALUES ('ROLE_ADMIN');
 ```
 
 ### 5. Register a User
-```bash 
+
+```bash
 POST /api/auth/register
 
 Body:
@@ -100,7 +104,8 @@ Response:
 Note: Users are automatically assigned the ROLE_USER.
 
 ### 6. Login
-```bash 
+
+```bash
 POST /api/auth/login
 
 Body:
@@ -114,7 +119,8 @@ Response:
 ```
 
 ### 7. Access User Endpoint
-```bash 
+
+```bash
 GET /api/user/profile
 
 Header:
@@ -124,7 +130,8 @@ Authorization: Bearer <token>
 Roles allowed: USER, ADMIN
 
 ### 8. Create Admin Manually (SQL)
-```bash 
+
+```bash
 UPDATE users
 SET role_id = (SELECT id FROM roles WHERE name='ROLE_ADMIN')
 WHERE email = 'admin@mail.com';
@@ -133,7 +140,8 @@ WHERE email = 'admin@mail.com';
 After updating, login → get admin JWT → access admin endpoints.
 
 ### 9. Access Admin Endpoint
-```bash 
+
+```bash
 GET /api/admin/dashboard
 
 Header:
@@ -182,17 +190,20 @@ src/main/java/com/example/authservice/
 ```
 
 Explanation:
-- Controller: Handles HTTP requests and responses
-- Service: Business logic for authentication and JWT handling
-- Repository: Database access layer for User and Role entities
-- Entity: Database models representing tables
-- DTO: Request and response payloads
-- Config: Security setup and configuration
+
+-   Controller: Handles HTTP requests and responses
+-   Service: Business logic for authentication and JWT handling
+-   Repository: Database access layer for User and Role entities
+-   Entity: Database models representing tables
+-   DTO: Request and response payloads
+-   Config: Security setup and configuration
+
+---
 
 ## 🎯 Goals
 
-- Learn and implement JWT-based authentication in Spring Boot
-- Gain experience with role-based authorization
-- Build a clean, maintainable backend project for portfolio
-- Integrate PostgreSQL with Spring Data JPA
-- Follow standard controller-service-repository architecture
+-   Learn and implement JWT-based authentication in Spring Boot
+-   Gain experience with role-based authorization
+-   Build a clean, maintainable backend project for portfolio
+-   Integrate PostgreSQL with Spring Data JPA
+-   Follow standard controller-service-repository architecture
